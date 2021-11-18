@@ -7,7 +7,7 @@ import { GridMain } from 'Layout';
 
 import { Redirect, Route, Switch } from 'react-router';
 import LoadingScreen from 'views/LoadingScreen';
-import { Box, Paper } from '@mui/material';
+import { Paper } from '@mui/material';
 import Settings from 'views/Settings';
 
 export default function App() {
