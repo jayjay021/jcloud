@@ -20,6 +20,7 @@ jobs:
           name: build
           path: build
   deploy:
+    environment: 'Firebase PROD'
     name: Deploy
     needs: build
     runs-on: ubuntu-latest
