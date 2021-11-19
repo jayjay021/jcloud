@@ -13,6 +13,7 @@ env:
   REACT_APP_FIREBASE_MEASUREMENT_ID: '${{ secrets.REACT_APP_FIREBASE_MEASUREMENT_ID }}'
 jobs:
   build:
+    environment: production
     name: Build
     runs-on: ubuntu-latest
     steps:
@@ -28,7 +29,6 @@ jobs:
           name: build
           path: build
   deploy:
-    environment: production
     name: Deploy
     needs: build
     runs-on: ubuntu-latest
