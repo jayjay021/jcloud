@@ -1,7 +1,8 @@
 import { GridHeader } from 'Layout';
 import SidebarButton from 'components/Header/SidebarButton';
-import { Box } from '@mui/system';
 import Profile from 'components/Header/Profile';
+import { Typography, Box } from '@mui/material';
+import TopNavigation from 'components/Header/TopNavigation';
 
 const Header: React.FC = () => {
   return (
@@ -15,6 +16,12 @@ const Header: React.FC = () => {
         }}
       >
         <SidebarButton />
+        <Box sx={{ display: 'flex', alignItems: 'center', p: 2 }}>
+          <Typography variant='h5' sx={{ color: 'primary.contrastText' }}>
+            JCloud
+          </Typography>
+        </Box>
+        <TopNavigation />
         <Box
           sx={{
             flex: 1,

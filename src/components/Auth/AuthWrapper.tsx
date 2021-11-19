@@ -1,31 +1,36 @@
-import { useAuth0 } from '@auth0/auth0-react';
 import { Box } from '@mui/system';
-import { sec } from 'security';
+import { Redirect, useLocation } from 'react-router-dom';
+import { useAuthState } from 'react-firebase-hooks/auth';
 import LoadingScreen from 'views/LoadingScreen';
 
+import { auth } from 'config/firebase';
+
 const AuthWrapper: React.FC = ({ children }) => {
-  const {
-    isLoading,
-    isAuthenticated,
-    error,
-    loginWithRedirect,
-    getAccessTokenSilently,
-  } = useAuth0();
-  sec.setAccessTokenSilently(getAccessTokenSilently);
+  const [user, loading] = useAuthState(auth);
+  const location = useLocation();
 
   //auth states
-  if (isLoading) {
+  if (loading) {
     return (
       <Box sx={{ width: '100vw', height: '100vh' }}>
         <LoadingScreen />
       </Box>
     );
   }
-  if (error) {
-    return <div>upps something wrong</div>;
+  if (!user) {
+    if (!location.pathname.match(/^\/auth/i)) {
+      return (
+        <Redirect
+          to={{ pathname: '/auth/signin', state: { from: location } }}
+        />
+      );
+    } else {
+      return <>{children}</>;
+    }
   }
-  if (!isAuthenticated) {
-    loginWithRedirect();
+
+  if (location.pathname.match(/^\/auth/i)) {
+    return <Redirect to={{ pathname: '/', state: { from: location } }} />;
   }
 
   return <>{children}</>;

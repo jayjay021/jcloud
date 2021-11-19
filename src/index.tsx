@@ -7,7 +7,6 @@ import { theme } from 'theme';
 import { Layout } from 'Layout';
 import SidebarStatusProvider from 'components/Sidebar/SidebarStatusContext';
 import { CssBaseline } from '@mui/material';
-import Auth0ProviderWithHistory from 'components/Auth/Auth0ProviderWithHistory';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import { store } from 'store';
@@ -16,7 +15,7 @@ import AuthWrapper from 'components/Auth/AuthWrapper';
 ReactDOM.render(
   <Provider store={store}>
     <Router>
-      <Auth0ProviderWithHistory>
+      <AuthWrapper>
         <ThemeProvider theme={theme}>
           <Layout>
             <SidebarStatusProvider>
@@ -27,7 +26,7 @@ ReactDOM.render(
             </SidebarStatusProvider>
           </Layout>
         </ThemeProvider>
-      </Auth0ProviderWithHistory>
+      </AuthWrapper>
     </Router>
   </Provider>,
   document.getElementById('root')

@@ -1,4 +1,3 @@
-import { useAuth0 } from '@auth0/auth0-react';
 import {
   LogoutOutlined,
   PersonOutlined,
@@ -12,10 +11,12 @@ import {
   MenuItem,
 } from '@mui/material';
 import { Box } from '@mui/system';
+import { auth } from 'config/firebase';
 import React from 'react';
+import { useAuthState } from 'react-firebase-hooks/auth';
 
 const Profile: React.FC = () => {
-  const { user, logout } = useAuth0();
+  const [user] = useAuthState(auth);
 
   const [anchorEl, setAnchorEl] = React.useState<HTMLElement | null>(null);
   const open = Boolean(anchorEl);
@@ -41,8 +42,11 @@ const Profile: React.FC = () => {
         aria-expanded={open ? 'true' : undefined}
         onClick={handleClick}
       >
-        <Avatar alt={user?.nickname} src={user?.picture}>
-          {user?.nickname}
+        <Avatar
+          alt={user?.displayName ?? undefined}
+          src={user?.photoURL ?? undefined}
+        >
+          {user?.displayName}
         </Avatar>
       </IconButton>
       <Menu
@@ -91,13 +95,7 @@ const Profile: React.FC = () => {
           </ListItemIcon>
           Settings
         </MenuItem>
-        <MenuItem
-          onClick={() =>
-            logout({
-              returnTo: window.location.origin,
-            })
-          }
-        >
+        <MenuItem onClick={() => auth.signOut()}>
           <ListItemIcon>
             <LogoutOutlined fontSize='small' />
           </ListItemIcon>

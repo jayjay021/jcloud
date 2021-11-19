@@ -4,7 +4,7 @@ import {
   ListItemIcon,
   ListItemText,
 } from '@mui/material';
-import { SidebarItemI } from 'components/Sidebar';
+import { SidebarItemI } from 'components/Header/TopNavigation';
 
 import { useHistory, useRouteMatch } from 'react-router';
 
@@ -17,8 +17,9 @@ const SidebarItem: React.FC<SidebarItemsProps> = ({
   icon,
   label,
   to,
+  exact,
 }) => {
-  const match = useRouteMatch(to);
+  const match = useRouteMatch({ path: to, exact: exact });
   const history = useHistory();
   return (
     <ListItem disablePadding>

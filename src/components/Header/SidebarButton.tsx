@@ -37,7 +37,7 @@ const SidebarButton: React.FC = () => {
     <Box
       onClick={() => toggle()}
       sx={{
-        backgroundColor: collapsed ? 'primary.dark' : 'background.default',
+        backgroundColor: collapsed ? 'primary.dark' : 'background.paper',
         width: '60px',
         height: '100%',
         display: 'flex',
@@ -45,7 +45,7 @@ const SidebarButton: React.FC = () => {
         justifyContent: 'center',
         cursor: 'pointer',
         '&:hover': {
-          filter: 'brightness(80%)',
+          filter: 'brightness(90%)',
         },
       }}
     >
@@ -54,7 +54,7 @@ const SidebarButton: React.FC = () => {
           sx={{
             ...divStyle,
             transform: collapsed ? 'rotate(0)' : 'rotate(45deg)',
-            backgroundColor: collapsed ? 'background.default' : 'primary.dark',
+            backgroundColor: collapsed ? 'background.paper' : 'primary.dark',
           }}
         />
         <Box
@@ -62,14 +62,14 @@ const SidebarButton: React.FC = () => {
             ...divStyle,
             opacity: collapsed ? '1' : '0',
             transform: collapsed ? 'translateX(0)' : 'translateX(5px)',
-            backgroundColor: collapsed ? 'background.default' : 'primary.dark',
+            backgroundColor: collapsed ? 'background.paper' : 'primary.dark',
           }}
         />
         <Box
           sx={{
             ...divStyle,
             transform: collapsed ? 'rotate(0)' : 'rotate(-45deg)',
-            backgroundColor: collapsed ? 'background.default' : 'primary.dark',
+            backgroundColor: collapsed ? 'background.paper' : 'primary.dark',
           }}
         />
       </MuiStyledSidebarButton>
