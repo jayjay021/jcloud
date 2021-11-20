@@ -14,7 +14,8 @@ const FilesDir: React.FC = () => {
 
   return (
     <Box sx={{ width: '100%', height: '100%', pl: 1, pr: 1 }}>
-      <Breadcrumb path={path} /> <FileList path={`/${path}`} />
+      <Breadcrumb path={path} />
+      <FileList path={`/${path}`} />
     </Box>
   );
 };

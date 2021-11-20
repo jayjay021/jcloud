@@ -6,7 +6,7 @@ import relativeTime from 'dayjs/plugin/relativeTime';
 import { useHistory } from 'react-router';
 dayjs.extend(relativeTime);
 
-type FileType = 'file' | 'dir';
+export type FileType = 'file' | 'dir';
 
 export interface IFile {
   path: string;
@@ -15,6 +15,7 @@ export interface IFile {
   type: FileType;
   createdAt: number;
   modifiedAt: number;
+  owner: string;
 }
 
 interface FileItemProps {

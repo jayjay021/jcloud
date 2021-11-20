@@ -6,6 +6,8 @@ import {
 
 import { Box, IconButton, Link, Typography } from '@mui/material';
 import Breadcrumbs from '@mui/material/Breadcrumbs';
+import AddMenu from 'components/Files/AddMenu';
+import { useState } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 
 interface BreadcrumbProps {
@@ -13,6 +15,15 @@ interface BreadcrumbProps {
 }
 
 const Breadcrumb: React.FC<BreadcrumbProps> = ({ path }) => {
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const open = Boolean(anchorEl);
+  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
   return (
     <Box sx={{ display: 'flex', alignItems: 'center' }}>
       <Breadcrumbs
@@ -49,9 +60,23 @@ const Breadcrumb: React.FC<BreadcrumbProps> = ({ path }) => {
           );
         })}
       </Breadcrumbs>
-      <IconButton>
+      <IconButton
+        id='add-button'
+        aria-controls='add-menu'
+        aria-haspopup='true'
+        aria-expanded={open ? 'true' : undefined}
+        onClick={handleClick}
+      >
         <AddCircleOutlineOutlined />
       </IconButton>
+      {open && (
+        <AddMenu
+          open={open}
+          handleClose={handleClose}
+          anchorEl={anchorEl}
+          path={path}
+        />
+      )}
     </Box>
   );
 };
