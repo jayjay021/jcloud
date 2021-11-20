@@ -69,7 +69,6 @@ export default function SignIn() {
     try {
       await signInWithEmailAndPassword(auth, email, password);
       const { from } = location.state || { from: { pathname: '/' } };
-      console.log(from);
       history.push(from.pathname);
     } catch (e) {}
   };

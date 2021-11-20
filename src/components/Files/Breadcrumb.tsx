@@ -13,7 +13,6 @@ interface BreadcrumbProps {
 }
 
 const Breadcrumb: React.FC<BreadcrumbProps> = ({ path }) => {
-  console.log(path.split('/'));
   return (
     <Box sx={{ display: 'flex', alignItems: 'center' }}>
       <Breadcrumbs
@@ -31,7 +30,11 @@ const Breadcrumb: React.FC<BreadcrumbProps> = ({ path }) => {
         </Link>
         {path.split('/').map((subPath, i, arr) => {
           if (i === arr.length - 1) {
-            return <Typography color='text.primary'>{subPath}</Typography>;
+            return (
+              <Typography key={i} color='text.primary'>
+                {subPath}
+              </Typography>
+            );
           }
           return (
             <Link

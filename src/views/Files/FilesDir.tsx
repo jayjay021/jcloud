@@ -1,6 +1,8 @@
 import { Box } from '@mui/material';
 import Breadcrumb from 'components/Files/Breadcrumb';
 import { useLocation } from 'react-router';
+import React from 'react';
+import FileList from 'components/Files/FileList';
 
 type LocationState = {
   pathname: string;
@@ -8,11 +10,11 @@ type LocationState = {
 
 const FilesDir: React.FC = () => {
   const location = useLocation<LocationState>();
-  console.log(location);
+  const path = location.pathname.replace(/^\/files\/dir[/]?/, '');
+
   return (
-    <Box sx={{ width: '100%', height: '100%', pl: 1 }}>
-      <Breadcrumb path={location.pathname.replace(/^\/files\/dir[/]?/, '')} />{' '}
-      dir content
+    <Box sx={{ width: '100%', height: '100%', pl: 1, pr: 1 }}>
+      <Breadcrumb path={path} /> <FileList path={`/${path}`} />
     </Box>
   );
 };
