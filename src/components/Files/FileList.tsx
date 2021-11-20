@@ -25,8 +25,9 @@ const FileList: React.FC<FileListProps> = ({ path }) => {
   const [user] = useAuthState(auth);
   const [value, isLoading] = useCollection(
     query(
-      collection(firestore, `/Files/${user?.uid}/files`),
-      where('path', '==', path)
+      collection(firestore, `/files`),
+      where('path', '==', path),
+      where('owner', '==', user?.uid)
     ),
     {
       snapshotListenOptions: { includeMetadataChanges: true },
