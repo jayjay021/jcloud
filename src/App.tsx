@@ -12,6 +12,8 @@ import Settings from 'views/Settings';
 import SignIn from 'views/auth/SignIn';
 import SignUp from 'views/auth/SignUp';
 import { LocationState } from 'types/LocationType';
+import FilesRouter from 'views/Files';
+import PhotosRouter from 'views/Photos';
 
 export default function App() {
   const location = useLocation<LocationState>();
@@ -39,6 +41,12 @@ export default function App() {
           <Switch>
             <Route path='/' exact>
               <Redirect from='/' to='/files' />
+            </Route>
+            <Route path='/files'>
+              <FilesRouter />
+            </Route>
+            <Route path='/photos'>
+              <PhotosRouter />
             </Route>
             <Route path='/security'>
               <LoadingScreen />
