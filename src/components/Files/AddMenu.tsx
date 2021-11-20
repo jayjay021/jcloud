@@ -61,7 +61,7 @@ const AddMenu: React.FC<AddMenuProps> = ({
       };
 
       try {
-        const docRef = await addDoc(collection(firestore, '/files'), newFile);
+        await addDoc(collection(firestore, '/files'), newFile);
       } catch (e) {
         console.log(e);
       }
