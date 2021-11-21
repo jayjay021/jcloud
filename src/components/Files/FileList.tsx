@@ -11,7 +11,7 @@ import {
   TableRow,
   Typography,
 } from '@mui/material';
-import FileItem, { IFile } from 'components/Files/FileItem';
+import FileItem from 'components/Files/FileItem';
 import { auth, firestore } from 'config/firebase';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { useCollection } from 'react-firebase-hooks/firestore';
@@ -64,8 +64,7 @@ const FileList: React.FC<FileListProps> = ({ path }) => {
         </TableHead>
         <TableBody>
           {value?.docs.map((doc) => {
-            const file = doc.data() as IFile;
-            return <FileItem key={`${file.path}/${file.name}`} file={file} />;
+            return <FileItem key={doc.id} fileDoc={doc} />;
           })}
         </TableBody>
       </Table>
