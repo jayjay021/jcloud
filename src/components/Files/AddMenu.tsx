@@ -21,6 +21,7 @@ import { addDoc, collection } from '@firebase/firestore';
 import { auth, firestore } from 'config/firebase';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { getStorage, ref, uploadBytes, uploadString } from 'firebase/storage';
+import { useSnackbar } from 'notistack';
 
 const Input = styled('input')({
   display: 'none',
@@ -38,6 +39,7 @@ const AddMenu: React.FC<AddMenuProps> = ({
   handleClose,
   path,
 }) => {
+  const { enqueueSnackbar } = useSnackbar();
   const [user] = useAuthState(auth);
   const [inputType, setInputType] = useState<FileType | null>(null);
   const [inputValue, setInputValue] = useState<string>('');
@@ -66,15 +68,16 @@ const AddMenu: React.FC<AddMenuProps> = ({
       };
 
       try {
-        addDoc(collection(firestore, '/files'), newFile).then((doc) => {
-          uploadString(ref(getStorage(), doc.id), '').then((snapshot) => {
-            console.log('uplaod successfully');
-          });
+        const doc = await addDoc(collection(firestore, '/files'), newFile);
+        await uploadString(ref(getStorage(), doc.id), '');
+        enqueueSnackbar(`Successfully created ${newFile.name}`, {
+          variant: 'success',
         });
       } catch (e) {
-        console.log(e);
+        enqueueSnackbar(`Unable to created ${newFile.name}`, {
+          variant: 'error',
+        });
       }
-
       onClose();
     }
   };
@@ -100,11 +103,17 @@ const AddMenu: React.FC<AddMenuProps> = ({
         type: 'file',
       };
 
-      addDoc(collection(firestore, '/files'), newFile).then((doc) => {
-        uploadBytes(ref(getStorage(), doc.id), file).then((snapshot) => {
-          console.log('uplaod successfully');
+      try {
+        const doc = await addDoc(collection(firestore, '/files'), newFile);
+        await uploadBytes(ref(getStorage(), doc.id), file);
+        enqueueSnackbar(`Successfully uploaded ${newFile.name}`, {
+          variant: 'success',
         });
-      });
+      } catch (error) {
+        enqueueSnackbar(`Unable to upload ${newFile.name}`, {
+          variant: 'success',
+        });
+      }
     }
   };
 

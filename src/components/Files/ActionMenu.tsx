@@ -5,6 +5,7 @@ import { updateDoc, deleteDoc } from '@firebase/firestore';
 import { getStorage, ref, deleteObject } from 'firebase/storage';
 import { QueryDocumentSnapshot, DocumentData } from 'firebase/firestore';
 import { IFile } from 'components/Files/FileItem';
+import { useSnackbar } from 'notistack';
 
 interface ActionMenuProps {
   anchorEl: HTMLElement | null;
@@ -20,6 +21,7 @@ const ActionMenu: React.FC<ActionMenuProps> = ({
   fileDoc,
 }) => {
   const fileData = fileDoc.data() as IFile;
+  const { enqueueSnackbar } = useSnackbar();
 
   const onClose = () => {
     handleClose();
@@ -28,9 +30,19 @@ const ActionMenu: React.FC<ActionMenuProps> = ({
 
   const onDelete = async (event: React.MouseEvent<HTMLLIElement>) => {
     event.stopPropagation();
-    deleteObject(ref(getStorage(), fileDoc.id)).then(async () => {
+
+    try {
+      await deleteObject(ref(getStorage(), fileDoc.id));
       await deleteDoc(fileDoc.ref);
-    });
+      enqueueSnackbar(`${fileData.name} deleted successfully`, {
+        variant: 'success',
+      });
+    } catch (error) {
+      enqueueSnackbar(`Unable to delete ${fileData.name}`, {
+        variant: 'error',
+      });
+    }
+
     handleClose();
   };
 

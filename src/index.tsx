@@ -11,20 +11,26 @@ import { BrowserRouter as Router } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import { store } from 'store';
 import AuthWrapper from 'components/Auth/AuthWrapper';
+import { SnackbarProvider } from 'notistack';
 
 ReactDOM.render(
   <Provider store={store}>
     <Router>
       <AuthWrapper>
         <ThemeProvider theme={theme}>
-          <Layout>
-            <SidebarStatusProvider>
-              <CssBaseline />
-              <AuthWrapper>
-                <App />
-              </AuthWrapper>
-            </SidebarStatusProvider>
-          </Layout>
+          <SnackbarProvider
+            maxSnack={3}
+            anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
+          >
+            <Layout>
+              <SidebarStatusProvider>
+                <CssBaseline />
+                <AuthWrapper>
+                  <App />
+                </AuthWrapper>
+              </SidebarStatusProvider>
+            </Layout>
+          </SnackbarProvider>
         </ThemeProvider>
       </AuthWrapper>
     </Router>
