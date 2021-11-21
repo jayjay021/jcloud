@@ -69,14 +69,12 @@ const Breadcrumb: React.FC<BreadcrumbProps> = ({ path }) => {
       >
         <AddCircleOutlineOutlined />
       </IconButton>
-      {open && (
-        <AddMenu
-          open={open}
-          handleClose={handleClose}
-          anchorEl={anchorEl}
-          path={path}
-        />
-      )}
+      <AddMenu
+        open={open}
+        handleClose={handleClose}
+        anchorEl={anchorEl}
+        path={path}
+      />
     </Box>
   );
 };

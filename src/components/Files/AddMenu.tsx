@@ -13,14 +13,18 @@ import {
   InputAdornment,
   IconButton,
 } from '@mui/material';
-import { Box } from '@mui/system';
+import { Box, styled } from '@mui/system';
 import { FileType, IFile } from 'components/Files/FileItem';
 import { useState } from 'react';
 import dayjs from 'dayjs';
 import { addDoc, collection } from '@firebase/firestore';
 import { auth, firestore } from 'config/firebase';
 import { useAuthState } from 'react-firebase-hooks/auth';
+import { getStorage, ref, uploadBytes, uploadString } from 'firebase/storage';
 
+const Input = styled('input')({
+  display: 'none',
+});
 interface AddMenuProps {
   anchorEl: HTMLElement | null;
   open: boolean;
@@ -56,71 +60,114 @@ const AddMenu: React.FC<AddMenuProps> = ({
         createdAt: dayjs().unix(),
         modifiedAt: dayjs().unix(),
         size: 0,
-        path: path || '/',
+        path: `/${path}`,
         owner: user?.uid,
       };
 
       try {
-        await addDoc(collection(firestore, '/files'), newFile);
+        addDoc(collection(firestore, '/files'), newFile).then((doc) => {
+          uploadString(ref(getStorage(), doc.id), '').then((snapshot) => {
+            console.log('uplaod successfully');
+          });
+        });
       } catch (e) {
         console.log(e);
       }
 
-      handleClose();
+      onClose();
     }
   };
 
+  const onClose = () => {
+    handleClose();
+    setTimeout(() => {
+      setInputValue('');
+      setInputType(null);
+    }, 500);
+  };
+
+  const uploadFile = async (file: File) => {
+    if (user) {
+      const newFile: IFile = {
+        createdAt: dayjs().unix(),
+        modifiedAt: dayjs().unix(),
+        owner: user.uid,
+        name: file.name,
+        path: `/${path}`,
+        size: file.size,
+        type: 'file',
+      };
+
+      addDoc(collection(firestore, '/files'), newFile).then((doc) => {
+        uploadBytes(ref(getStorage(), doc.id), file).then((snapshot) => {
+          console.log('uplaod successfully');
+        });
+      });
+    }
+  };
+
+  const onFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const files = event.currentTarget.files || [];
+    Array.from(files).map(async (file) => uploadFile(file));
+    onClose();
+  };
+
   return (
-    <Menu
-      id='add-menu'
-      anchorEl={anchorEl}
-      open={open}
-      onClose={handleClose}
-      MenuListProps={{
-        'aria-labelledby': 'add-button',
-      }}
-    >
-      <Box sx={{ width: '250px', maxWidth: '100%', height: '100%' }}>
-        <MenuItem onClick={handleClose}>
-          <ListItemIcon>
-            <FileUploadOutlined />
-          </ListItemIcon>
-          <ListItemText>Upload File</ListItemText>
-        </MenuItem>
-        <MenuItem onClick={handleOnClick('dir')}>
-          <ListItemIcon>
-            <FolderOutlined />
-          </ListItemIcon>
-          <ListItemText>
-            {inputType === 'dir' ? (
-              <NewTextField
-                value={inputValue}
-                setValue={setInputValue}
-                onSave={onCreate}
-              />
-            ) : (
-              'New Folder'
-            )}
-          </ListItemText>
-        </MenuItem>
-        <MenuItem onClick={handleOnClick('file')}>
-          <ListItemIcon>
-            <DescriptionOutlined />
-          </ListItemIcon>
-          <ListItemText>
-            {inputType === 'file' ? (
-              <NewTextField
-                value={inputValue}
-                setValue={setInputValue}
-                onSave={onCreate}
-              />
-            ) : (
-              'New File'
-            )}
-          </ListItemText>
-        </MenuItem>
-      </Box>
-    </Menu>
+    <>
+      <Input id='upload-files' multiple type='file' onChange={onFileChange} />
+      <Menu
+        id='add-menu'
+        anchorEl={anchorEl}
+        open={open}
+        onClose={onClose}
+        MenuListProps={{
+          'aria-labelledby': 'add-button',
+        }}
+      >
+        <Box sx={{ width: '250px', maxWidth: '100%', height: '100%' }}>
+          <label htmlFor='upload-files'>
+            <MenuItem onClick={onClose}>
+              <ListItemIcon>
+                <FileUploadOutlined />
+              </ListItemIcon>
+              <ListItemText>Upload File</ListItemText>
+            </MenuItem>
+          </label>
+          <MenuItem onClick={handleOnClick('dir')}>
+            <ListItemIcon>
+              <FolderOutlined />
+            </ListItemIcon>
+            <ListItemText>
+              {inputType === 'dir' ? (
+                <NewTextField
+                  value={inputValue}
+                  setValue={setInputValue}
+                  onSave={onCreate}
+                />
+              ) : (
+                'New Folder'
+              )}
+            </ListItemText>
+          </MenuItem>
+          <MenuItem onClick={handleOnClick('file')}>
+            <ListItemIcon>
+              <DescriptionOutlined />
+            </ListItemIcon>
+            <ListItemText>
+              {inputType === 'file' ? (
+                <NewTextField
+                  value={inputValue}
+                  setValue={setInputValue}
+                  onSave={onCreate}
+                />
+              ) : (
+                'New File'
+              )}
+            </ListItemText>
+          </MenuItem>
+        </Box>
+      </Menu>
+    </>
   );
 };
 
